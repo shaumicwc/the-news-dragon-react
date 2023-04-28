@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 
 const LeftNav = () => {
 
-    const [catagories, setCatagories] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/catagories')
+        fetch('http://localhost:5000/categories')
             .then(res => res.json())
-            .then(data => setCatagories(data))
+            .then(data => setCategories(data))
             .catch(error => console.error(error))
     }, [])
 
@@ -17,11 +17,11 @@ const LeftNav = () => {
             <h4>All Category</h4>
             <div className='ps-4 '>
                 {
-                    catagories.map(catagoey =>
+                    categories.map(category =>
                         <p
-                            key={catagoey.id}
+                            key={category.id}
                         >
-                            <Link to={`/catagoey/${catagoey.id}`} className='text-decoration-none text-black'>{catagoey.name}</Link>
+                            <Link to={`/category/${category.id}`} className='text-decoration-none text-black'>{category.name}</Link>
 
                         </p>)
                 }
