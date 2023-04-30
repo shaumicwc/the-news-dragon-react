@@ -1,41 +1,61 @@
-import { createBrowserRouter } from "react-router-dom";
-import Main from "../layout/main";
-import Home from "../pages/Home/Home/Home";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Category from "../pages/Home/Category/Category";
-import NewsLayout from "../layout/NewsLayout";
 import News from "../pages/News/News/News";
+
+import Login from "../pages/Login/Login/Login";
+import Register from "../pages/Login/Register/Register";
+import PrivateRoute from "./PrivateRoute";
+import Terms from "../pages/Shared/Terms/Terms";
+import Main from "../layout/Main";
+import NewsLayout from "../layout/NewsLayout";
+import LoginLayout from "../layout/LoginLayout";
+
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Main/>,
-        children : [
+        element: <LoginLayout></LoginLayout>,
+        children: [
             {
-                path:'/',
-                element: <Category></Category>,
-                loader: () => fetch (`http://localhost:5000/news/`)
+                path: '/',
+                element: <Navigate to="/category/0"></Navigate>
             },
             {
-                path:'/category/:id',
-                element: <Category/>,
-                loader: ({params}) => fetch(`http://localhost:5000/categories/${params.id}`)
+                path: 'login',
+                element: <Login></Login>
+            },
+            {
+                path: 'register',
+                element: <Register></Register>
+            }, 
+            {
+                path: 'terms', 
+                element: <Terms></Terms>
             }
-          
         ]
     },
-    
-        {
-            path: 'news',
-            element: <NewsLayout></NewsLayout>,
-            children : [
-                {
-                    path:':id',
-                    element: <News></News>,
-                    loader: ({params}) => fetch (`http://localhost:5000/news/${params.id}`)
-                },
-            ]
-        },
-    
+    {
+        path: 'category',
+        element: <Main></Main>,
+        children: [
+            {
+                path: ':id',
+                element: <Category></Category>,
+                loader: ({params}) => fetch(`https://the-news-dragon-server-jhankarphero.vercel.app/categories/${params.id}`)
+            }
+        ]
+    }, 
+    {
+        path: 'news', 
+        element: <NewsLayout></NewsLayout>,
+        children: [
+            {
+                path: ':id',
+                element: <PrivateRoute><News></News></PrivateRoute>,
+                loader: ({params}) => fetch(`https://the-news-dragon-server-jhankarphero.vercel.app/news/${params.id}`)
+            }
+        ]
+    }
 ])
 
 export default router;
